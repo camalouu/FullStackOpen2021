@@ -20,7 +20,6 @@ const App = () => {
   const randNum = Math.floor(Math.random() * anecdotes.length)
 
   const nextAnecdote = () => setState({ ...state, selected: randNum })
-
   const handleVote = () => {
     const copy = [...state.votes]
     copy[state.selected]++
@@ -36,9 +35,9 @@ const App = () => {
         anecdote={anecdotes[state.selected]}
         votes={state.votes[state.selected]} />
 
-      <Button handleFun={handleVote} text="vote" />
+      <Button handleFunction={handleVote} text="vote" />
 
-      <Button handleFun={nextAnecdote} text="next anecdote" />
+      <Button handleFunction={nextAnecdote} text="next anecdote" />
       <DisplayAnecdote
         header="anecdote with most votes"
         anecdote={anecdotes[state.votes.indexOf(mostVoted)]}

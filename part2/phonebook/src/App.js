@@ -1,22 +1,6 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-
-const Filter = ({ filterFun }) => <div>filter shown with <input onChange={filterFun} /></div>
-
-const PersonForm = ({ submitFun, nameOnchange, numberOnchange }) =>
-  <form onSubmit={submitFun}>
-    <div>name: <input onChange={nameOnchange} /></div>
-    <div>number: <input onChange={numberOnchange} /></div>
-    <div><button type="submit">add</button></div>
-  </form>
-
-const Persons = ({ persons }) =>
-  <div>
-    {persons.map(person =>
-      <div
-        key={person.name}>{person.name} {person.number}
-      </div>)}
-  </div>
+import services from './services/phone_book_service'
+import { Filter, PersonForm, Persons } from './components'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -28,19 +12,41 @@ const App = () => {
   const filterFun = e => setNewfilter(e.target.value)
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => setPersons(response.data))
+    services
+      .getAll()
+      .then(response => setPersons(response))
   }, [])
 
   const addName = (e) => {
     e.preventDefault()
-    if (persons.some(el => el.name === newName))
-      alert(`${newName} is alrady added to phonebook`)
-    else if (persons.some(el => el.number === newNumber))
-      alert(`${newNumber} is alrady added to phonebook`)
-    else
-      setPersons(persons.concat({ name: newName, number: newNumber }))
+
+    const alreadyExist = persons.find(el => el.name === newName)
+
+    if (alreadyExist) {
+      if (window.confirm(`${newName} is alrady added to phonebook, replace the old number with a new one?`)) {
+        services
+          .put(alreadyExist.id, { ...alreadyExist, number: newNumber })
+          .then(res =>
+            setPersons(
+              persons.map(el => el.id === alreadyExist.id ? el = res : el)
+            )
+          )
+      }
+    }
+    else {
+      const postObject = { name: newName, number: newNumber }
+      services
+        .post(postObject)
+        .then(res => { setPersons(persons.concat(res)); console.log(res); })
+    }
+  }
+
+  const handleDelete = id => () => {
+    if (window.confirm(`Delete ${persons.find(p => p.id === id).name}`))
+      services
+        .del(id)
+        .then(services.getAll)
+        .then(res => setPersons(res))
   }
 
   const showPersons = persons.filter(person =>
@@ -55,7 +61,7 @@ const App = () => {
         nameOnchange={handleNameInput}
         numberOnchange={handleNumberInput} />
       <h2>Numbers</h2>
-      <Persons persons={showPersons} />
+      <Persons persons={showPersons} handleDelete={handleDelete} />
     </div>
   )
 }

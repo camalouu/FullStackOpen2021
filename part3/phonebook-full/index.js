@@ -1,7 +1,10 @@
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/Person')
 
 app.use(cors())
 app.use(express.json())
@@ -10,45 +13,19 @@ app.use(express.static('build'))
 morgan.token('body', req => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let data = [
-    {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-]
-
 app.get('/api/persons', (req, res) => {
-    res.json(data)
+    Person.find({}).then(result => res.json(result))
 })
 
 app.get('/info', (req, res) => {
-    res.send(`Phonebook has info for ${data.length} people <br> ${new Date()}`)
+    Person.count().then(number => {
+        res.send(`Phonebook has info for ${number} people <br> ${new Date()}`)
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = req.params.id
-    const person = data.find(p => p.id == id)
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+    Person.findById(req.params.id)
+        .then(person => res.json(person))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -69,17 +46,13 @@ app.post('/api/persons', (req, res) => {
     if (!name || !number)
         return res.status(400).send({ error: 'name and number are required' })
 
-    if (data.find(p => p.name === name))
-        return res.status(400).send({ error: 'already existing name' })
-
-    const newPerson = {
-        id: Math.floor(Math.random() * 1000),
+    const newPerson = new Person({
         name: name,
         number: number
-    }
-    data.push(newPerson)
-    res.send(newPerson)
+    })
+
+    newPerson.save().then(_ => res.send(newPerson))
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => console.log(`App is working on ${PORT}`))

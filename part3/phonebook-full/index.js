@@ -59,7 +59,7 @@ app.post('/api/persons', (req, res, next) => {
     })
 
     newPerson.save()
-        .then(_ => res.send(newPerson))
+        .then(() => res.send(newPerson))
         .catch(error => next(error))
 })
 
@@ -70,12 +70,12 @@ app.put('/api/persons/:id', (req, res, next) => {
             if (result)
                 res.json(result)
             else
-                res.status(404).end();
+                res.status(404).end()
         })
         .catch(error => next(error))
 })
 
-const errorHandler = (error, req, res, next) => {
+const errorHandler = (error, req, res) => {
     console.error(error.message)
     if (error.name === 'CastError')
         return res.status(400).send({ error: 'malformatted id' })

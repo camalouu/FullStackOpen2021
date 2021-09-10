@@ -85,9 +85,9 @@ describe('getting', () => {
 
 })
 
-describe('creating a blog', () => {
+describe('creating', () => {
 
-    test('new blog added', async () => {
+    test('adding a new valid blog', async () => {
 
         const newBlog = {
             title: "Why nations fail",
@@ -141,9 +141,68 @@ describe('creating a blog', () => {
             .expect(400)
 
     })
-    
+
 })
 
+describe('deleting', () => {
+    const id = '5a422a851b54a676234d17f7' // first obj in blogs
+
+    test('valid existing blog', async () => {
+        await api
+            .get(`/api/blogs/${id}`)
+            .expect(200)
+
+    })
+
+    test('blog deleted', async () => {
+
+        await api.delete(`/api/blogs/${id}`).expect(204)
+
+        const { body } = await api.get('/api/blogs')
+
+        expect(body).toHaveLength(blogs.length - 1)
+
+        const ids = body.map(e => e.id)
+
+        expect(ids).not.toContain(id)
+
+    })
+})
+
+describe('updating', () => {
+
+    test('updating nonexisting blog', async () => {
+        const fakeId = '5a422a851b54a676234d17f1'
+
+        const newObject = {
+            author: 'Joshua',
+            url: 'example.com',
+        }
+
+        await api
+            .put(`/api/blogs/${fakeId}`)
+            .send(newObject)
+            .expect(404)
+
+    })
+
+
+    test('updating a valid blog', async () => {
+        const id = '5a422aa71b54a676234d17f8' // second obj in blogs
+
+        await api.put(`/api/blogs/${id}`)
+            .send({ likes: 12 })
+            .expect(200)
+
+        const { body } = await api.get('/api/blogs')
+
+        const newTitle = body.find(e => e.id === id).likes
+        const oldTitle = blogs.find((e => e._id === id)).likes
+
+        expect(newTitle).not.toBe(oldTitle)
+
+    })
+})
 
 afterAll(() => {
     mongoose.connection.close()

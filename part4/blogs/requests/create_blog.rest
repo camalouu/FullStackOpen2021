@@ -4,6 +4,6 @@ Content-Type: application/json
 {
     "title": "The Hobbit",
     "author": "Tolkien",
-    "url": 121,
-    "likes": "asdfasdf"
+    "url": "dd.org",
+    "likes": 22
 }

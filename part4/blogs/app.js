@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 const config = require('./utils/config')
 const blogRouter = require('./controllers/blog_controller')
-const usersRouter = require('./controllers/users')
+const usersRouter = require('./controllers/users_controller')
 const middleware = require('./utils/middleware')
 
 logger.info('connecting to', config.MONGODB_URI)

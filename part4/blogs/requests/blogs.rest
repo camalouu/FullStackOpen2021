@@ -1,0 +1,16 @@
+##get all##
+GET http://localhost:3001/api/blogs
+
+###delete blog###
+DELETE http://localhost:3001/api/blogs/61529964050f3c08ff624d15
+
+###create blog###
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "7 habits",
+    "author": "Stiven",
+    "url": "77hhbb.org",
+    "likes": 10
+}

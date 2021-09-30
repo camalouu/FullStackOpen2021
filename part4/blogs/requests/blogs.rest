@@ -2,12 +2,12 @@
 GET http://localhost:3001/api/blogs
 
 ###delete blog###
-DELETE http://localhost:3001/api/blogs/61529964050f3c08ff624d15
+DELETE http://localhost:3001/api/blogs/
 
 ###create blog###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsnR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpZCI6IjYxNTQwN2E0YWY0NTc1MDQyNDA0NmM3OCIsImlhdCI6MTYzMjkwMDgxN30.sy4elYJ3V80O2nLC5Bz3iCZbmQHAeqxCS3mliEvkBag
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIiLCJpZCI6IjYxNTU0ODgxNmMxYzk0Y2JmYzM1MWZhMSIsImlhdCI6MTYzMjk3OTE0M30.CAOSs235OCSg0ax126neDxrK25GNI6rEiErpEl8c6gA
 
 {
     "title": "7 habits",

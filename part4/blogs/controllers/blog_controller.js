@@ -1,8 +1,7 @@
 const blogRouter = require('express').Router()
-const config = require('../utils/config')
-const jwt = require('jsonwebtoken')
 const Blog = require('../models/Blog')
 const User = require('../models/User')
+const middleware = require('../utils/middleware')
 
 blogRouter.get('/', async (request, response, next) => {
     try {
@@ -17,44 +16,37 @@ blogRouter.get('/', async (request, response, next) => {
 
 blogRouter.get('/:id', async (request, response, next) => {
     try {
-        const blogs = await Blog.findById(request.params.id)
-        response.json(blogs)
+        const blog = await Blog.findById(request.params.id)
+        response.json(blog)
     } catch (err) {
         next(err)
     }
 })
 
-blogRouter.post('/', async (request, response, next) => {
+blogRouter.post('/', middleware.userExtractor, async (request, response, next) => {
     try {
         const { body } = request
-        console.log(request.token)
-        const decodedToken = jwt.verify(request.token, config.SECRET)
-
-        if (!(token && decodedToken.id)) {
-            return response.status(401).json({ error: 'token missing or invalid' })
-        }
-
-        const user = await User.findById(decodedToken.id)
-
+        const user = await User.findById(request.user.id)
         const blog = new Blog({ ...body, user: user._id })
-
         const result = await blog.save()
-
         user.blogs = user.blogs.concat(result._id)
-
         await user.save()
-
         response.status(201).json(result)
-
     } catch (err) {
         next(err)
     }
 })
 
-blogRouter.delete('/:id', async (request, response, next) => {
+blogRouter.delete('/:id', middleware.userExtractor, async (request, response, next) => {
     try {
-        await Blog.findByIdAndRemove(request.params.id)
-        response.status(204).end()
+        const blogId = request.params.id
+        const blog = await Blog.findById(blogId)
+        if (blog.user.toString() === request.user.id) {
+            await Blog.findByIdAndDelete(blogId)
+            return response.status(204).end()
+        } else {
+            return response.status(401).json({ error: "wrong user" })
+        }
     }
     catch (err) {
         next(err)

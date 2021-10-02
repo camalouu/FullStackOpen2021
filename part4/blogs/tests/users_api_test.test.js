@@ -53,6 +53,7 @@ describe('creating user', () => {
         const response = await api
             .post('/api/users')
             .send(invalidUser)
+            .expect(400)
 
         expect(response.body.error)
             .toBe('password length must be longer than 3 characters')

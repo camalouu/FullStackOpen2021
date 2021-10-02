@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog')
+const User = require('../models/User')
 const supertest = require('supertest')
 const app = require('../app')
 const mongoose = require('mongoose')
@@ -58,7 +59,35 @@ const blogs = [
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(blogs)
+    await User.deleteMany({})
 }, 100000)
+
+
+const newUserSignsIn = async () => {
+
+    const newUser = {
+        username: "nacho123",
+        password: "IHateHector",
+        name: "Ignacio Varga"
+    }
+
+    await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-type', /application\/json/)
+
+
+    const token = (
+        await api
+            .post('/api/login')
+            .send({ ...newUser })
+            .expect(200)
+            .expect('Content-type', /application\/json/)
+    ).body.token
+
+    return token
+}
 
 describe('getting', () => {
 
@@ -96,8 +125,11 @@ describe('creating', () => {
             likes: 34
         }
 
+        const token = await newUserSignsIn()
+
         await api
             .post('/api/blogs')
+            .set('Authorization', 'bearer ' + token)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -112,6 +144,20 @@ describe('creating', () => {
 
     })
 
+    test('adding a blog without token', async () => {
+        const newBlog = {
+            title: "Why nations fail",
+            author: "dunno",
+            url: "ex.com",
+            likes: 34
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(401)
+            .expect('Content-Type', /application\/json/)
+    })
+
     test("likes missing", async () => {
 
         const newBlog = {
@@ -120,10 +166,14 @@ describe('creating', () => {
             url: "ex.com",
         }
 
+        const token = await newUserSignsIn()
+
         const response = await api
             .post('/api/blogs')
+            .set('Authorization', 'bearer ' + token)
             .send(newBlog)
             .expect(201)
+            .expect('Content-Type', /application\/json/)
 
         expect(response.body.likes).toBe(0)
 
@@ -135,32 +185,49 @@ describe('creating', () => {
             author: "dunno",
         }
 
+        const token = await newUserSignsIn()
+
         await api
             .post('/api/blogs')
+            .set('Authorization', 'bearer ' + token)
             .send(newBlog)
             .expect(400)
+            .expect('Content-Type', /application\/json/)
 
     })
 
 })
 
 describe('deleting', () => {
-    const id = '5a422a851b54a676234d17f7' // first obj in blogs
-
-    test('valid existing blog', async () => {
-        await api
-            .get(`/api/blogs/${id}`)
-            .expect(200)
-
-    })
 
     test('blog deleted', async () => {
 
-        await api.delete(`/api/blogs/${id}`).expect(204)
+        const newBlog = {
+            title: "Why nations fail",
+            author: "dunno",
+            url: "ex.com",
+            likes: 34
+        }
+
+        const token = await newUserSignsIn()
+
+        const newBlogCreated = await api
+            .post('/api/blogs')
+            .set('Authorization', 'bearer ' + token)
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const id = newBlogCreated.body.id
+
+        await api
+            .delete(`/api/blogs/${id}`)
+            .set('Authorization', 'bearer ' + token)
+            .expect(204)
 
         const { body } = await api.get('/api/blogs')
 
-        expect(body).toHaveLength(blogs.length - 1)
+        expect(body).toHaveLength(blogs.length)
 
         const ids = body.map(e => e.id)
 

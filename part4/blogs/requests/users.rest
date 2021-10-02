@@ -1,15 +1,16 @@
+GET http://localhost:3001/api/users/
+
+######################
+
 POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "username": "newuser",
-    "password": "newuser",
-    "name": "Jackass"
+    "username": "newuser2",
+    "password": "newuser2",
+    "name": "Katy"
 }
 
 ######################
-GET http://localhost:3001/api/users/
 
-
-######################
 DELETE http://localhost:3001/api/users/

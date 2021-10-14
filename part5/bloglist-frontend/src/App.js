@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Login from './components/Login'
 import NewBlog from './components/Newblog'
 import Blogs from './components/Blogs'
+import Notification from './components/Notification'
 import Logout from './components/Logout'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -11,18 +12,20 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('newuser', JSON.stringify(user))
-
       setUser(user)
       blogService.setToken(user.token)
-
-    } catch (error) {
-      console.log(error)
+    } catch ({ response }) {
+      setMessage(response.data.error)
+      setInterval(() => {
+        setMessage('')
+      }, 5000)
     }
   }
 
@@ -46,21 +49,29 @@ const App = () => {
   if (user) {
     return (
       <div>
+        <Notification message={message} />
         <h1>Blogs</h1>
         <Logout user={user}
           handleLogout={() => window.localStorage.removeItem('newuser')} />
-        <NewBlog create={blogService.createBlog} setBlogs={setBlogs} blogs={blogs} />
+        <NewBlog
+          create={blogService.createBlog}
+          setBlogs={setBlogs}
+          blogs={blogs}
+          setMessage={setMessage} />
         <Blogs blogs={blogs} />
       </div>
     )
   }
 
   return (
-    <Login
-      setUsername={setUsername}
-      setPassword={setPassword}
-      handleLogin={handleLogin}
-    />
+    <div>
+      <Notification message={message} />
+      <Login
+        setUsername={setUsername}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+      />
+    </div>
   )
 }
 

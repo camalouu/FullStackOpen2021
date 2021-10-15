@@ -4,6 +4,7 @@ import NewBlog from './components/Newblog'
 import Blogs from './components/Blogs'
 import Notification from './components/Notification'
 import Logout from './components/Logout'
+import Toggable from './components/Toggable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -53,11 +54,13 @@ const App = () => {
         <h1>Blogs</h1>
         <Logout user={user}
           handleLogout={() => window.localStorage.removeItem('newuser')} />
-        <NewBlog
-          create={blogService.createBlog}
-          setBlogs={setBlogs}
-          blogs={blogs}
-          setMessage={setMessage} />
+        <Toggable buttonLabel='Create new blog'>
+          <NewBlog
+            create={blogService.createBlog}
+            setBlogs={setBlogs}
+            blogs={blogs}
+            setMessage={setMessage} />
+        </Toggable>
         <Blogs blogs={blogs} />
       </div>
     )
@@ -66,11 +69,13 @@ const App = () => {
   return (
     <div>
       <Notification message={message} />
-      <Login
-        setUsername={setUsername}
-        setPassword={setPassword}
-        handleLogin={handleLogin}
-      />
+      <Toggable buttonLabel='Log in'>
+        <Login
+          setUsername={setUsername}
+          setPassword={setPassword}
+          handleLogin={handleLogin}
+        />
+      </Toggable>
     </div>
   )
 }

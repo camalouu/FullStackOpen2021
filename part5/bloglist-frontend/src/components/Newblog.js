@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 
-const NewBlog = ({ setMessage, create, setBlogs, blogs }) => {
+const NewBlog = ({ setMessage, create, setBlogs, blogs, toggleVisibility }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        toggleVisibility.tg()
         try {
             const createdBlog = await create({ title, author, url })
             blogs = blogs.concat(createdBlog)
             setBlogs(blogs)
-            console.log(createdBlog)
         } catch ({ response }) {
             setMessage(response.data.error)
             setInterval(() => {

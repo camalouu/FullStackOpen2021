@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Login from './components/Login'
 import NewBlog from './components/Newblog'
 import Blogs from './components/Blogs'
@@ -39,13 +39,13 @@ const App = () => {
     }
   }, [])
 
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
   }, [])
 
+  const blogref = useRef()
 
   if (user) {
     return (
@@ -54,12 +54,12 @@ const App = () => {
         <h1>Blogs</h1>
         <Logout user={user}
           handleLogout={() => window.localStorage.removeItem('newuser')} />
-        <Toggable buttonLabel='Create new blog'>
+        <Toggable buttonLabel='Create new blog' ref={blogref}>
           <NewBlog
             create={blogService.createBlog}
             setBlogs={setBlogs}
             blogs={blogs}
-            setMessage={setMessage} />
+            setMessage={setMessage} toggleVisibility={blogref.current} />
         </Toggable>
         <Blogs blogs={blogs} />
       </div>

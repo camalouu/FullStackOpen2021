@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const blogStyle = {
@@ -10,7 +11,19 @@ const Blog = ({ blog }) => {
   }
 
   const [details, setDetails] = useState(false)
-  const show = { display: details ? '' : 'none' }
+  const [likes, setLikes] = useState(blog.likes)
+
+  const showDetails = { display: details ? '' : 'none' }
+  //const removeButtonStyle = { display: user.username === blog.user.username ? '' : 'none' }
+  const handleLike = async () => {
+    const newBlog = {
+      ...blog,
+      user: blog.user.id,
+      likes: likes + 1
+    }
+    await blogService.updateBlog(newBlog)
+    setLikes(likes + 1)
+  }
 
   return (
     <div style={blogStyle}>
@@ -20,19 +33,21 @@ const Blog = ({ blog }) => {
           {details ? 'hide' : 'view'}
         </button>
       </div>
-      <div style={show}>
+      <div style={showDetails}>
         {blog.url} <br />
-        {blog.likes}<br />
+        {likes} <button onClick={handleLike}>like</button><br />
         {blog.user.username}
       </div>
+      <button>remove</button>
     </div>
   )
 }
 
 const Blogs = ({ blogs }) => {
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
     <div>
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
     </div>

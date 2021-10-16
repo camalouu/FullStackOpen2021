@@ -30,8 +30,10 @@ const Blog = ({ blog, user }) => {
   }
 
   const handleRemove = async () => {
-    await blogService.deleteBlog(blog)
-    setShowBlog(false)
+    if (window.confirm(`Remove blog ${blog.title}`)) {
+      await blogService.deleteBlog(blog)
+      setShowBlog(false)
+    }
   }
 
   return (
@@ -45,9 +47,9 @@ const Blog = ({ blog, user }) => {
       <div style={showDetails}>
         {blog.url} <br />
         {likes} <button onClick={handleLike}>like</button><br />
-        {blog.user.username}
+        {blog.user.username}<br />
+        <button onClick={handleRemove} style={removeButtonStyle}>remove</button>
       </div>
-      <button onClick={handleRemove} style={removeButtonStyle}>remove</button>
     </div>
   )
 }

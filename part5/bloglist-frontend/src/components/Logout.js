@@ -1,6 +1,8 @@
 import React from 'react'
 
-const Logout = ({ user, handleLogout }) => {
+const Logout = ({ user }) => {
+    const handleLogout = () => window.localStorage.removeItem('newuser')
+    
     return (
         <div>
             <form onSubmit={handleLogout}>

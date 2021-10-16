@@ -17,8 +17,7 @@ const App = () => {
       <div>
         <Notification message={message} />
         <h1>Blogs</h1>
-        <Logout user={user}
-          handleLogout={() => window.localStorage.removeItem('newuser')} />
+        <Logout user={user} />
         <Toggable buttonLabel='Create new blog' ref={blogFormRef}>
           <NewBlog
             setBlogs={setBlogs}

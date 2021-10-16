@@ -1,51 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Login from './components/Login'
-import NewBlog from './components/Newblog'
-import Blogs from './components/Blogs'
+import React, { useState, useRef } from 'react'
 import Notification from './components/Notification'
+import Login from './components/Login'
 import Logout from './components/Logout'
+import Blogs from './components/Blogs'
+import NewBlog from './components/Newblog'
 import Toggable from './components/Toggable'
-import blogService from './services/blogs'
-import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState('')
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem('newuser', JSON.stringify(user))
-      setUser(user)
-      blogService.setToken(user.token)
-    } catch ({ response }) {
-      setMessage(response.data.error)
-      setInterval(() => {
-        setMessage('')
-      }, 5000)
-    }
-  }
-
-  useEffect(() => {
-    const userLoggedIn = window.localStorage.getItem('newuser')
-    if (userLoggedIn) {
-      const user = JSON.parse(userLoggedIn)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
-
-  const blogref = useRef()
+  const blogFormRef = useRef()
 
   if (user) {
     return (
@@ -54,14 +19,14 @@ const App = () => {
         <h1>Blogs</h1>
         <Logout user={user}
           handleLogout={() => window.localStorage.removeItem('newuser')} />
-        <Toggable buttonLabel='Create new blog' ref={blogref}>
+        <Toggable buttonLabel='Create new blog' ref={blogFormRef}>
           <NewBlog
-            create={blogService.createBlog}
             setBlogs={setBlogs}
             blogs={blogs}
-            setMessage={setMessage} toggleVisibility={blogref.current} />
+            setMessage={setMessage}
+            toggleVisibility={blogFormRef.current} />
         </Toggable>
-        <Blogs blogs={blogs} />
+        <Blogs user={user} blogs={blogs} setBlogs={setBlogs} />
       </div>
     )
   }
@@ -71,9 +36,8 @@ const App = () => {
       <Notification message={message} />
       <Toggable buttonLabel='Log in'>
         <Login
-          setUsername={setUsername}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
+          setUser={setUser}
+          setMessage={setMessage}
         />
       </Toggable>
     </div>

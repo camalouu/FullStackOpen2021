@@ -1,8 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, user }) => {
+
+  const [details, setDetails] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
+  const [showBlog, setShowBlog] = useState(true)
+
   const blogStyle = {
+    display: showBlog ? '' : 'none',
     paddingTop: 10,
     paddingLeft: 5,
     border: 'solid',
@@ -10,11 +16,9 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
-  const [details, setDetails] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
-
   const showDetails = { display: details ? '' : 'none' }
-  //const removeButtonStyle = { display: user.username === blog.user.username ? '' : 'none' }
+  const removeButtonStyle = { display: user.username === blog.user.username ? '' : 'none' }
+
   const handleLike = async () => {
     const newBlog = {
       ...blog,
@@ -23,6 +27,11 @@ const Blog = ({ blog }) => {
     }
     await blogService.updateBlog(newBlog)
     setLikes(likes + 1)
+  }
+
+  const handleRemove = async () => {
+    await blogService.deleteBlog(blog)
+    setShowBlog(false)
   }
 
   return (
@@ -38,17 +47,24 @@ const Blog = ({ blog }) => {
         {likes} <button onClick={handleLike}>like</button><br />
         {blog.user.username}
       </div>
-      <button>remove</button>
+      <button onClick={handleRemove} style={removeButtonStyle}>remove</button>
     </div>
   )
 }
 
-const Blogs = ({ blogs }) => {
+const Blogs = ({ blogs, setBlogs, user }) => {
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )
+  }, [setBlogs])
+
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
   return (
     <div>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} user={user} />
       )}
     </div>
   )

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
-const NewBlog = ({ setMessage, create, setBlogs, blogs, toggleVisibility }) => {
+const NewBlog = ({ setMessage, setBlogs, blogs, toggleVisibility }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
@@ -9,7 +10,7 @@ const NewBlog = ({ setMessage, create, setBlogs, blogs, toggleVisibility }) => {
         e.preventDefault()
         toggleVisibility.tg()
         try {
-            const createdBlog = await create({ title, author, url })
+            const createdBlog = await blogService.createBlog({ title, author, url })
             blogs = blogs.concat(createdBlog)
             setBlogs(blogs)
         } catch ({ response }) {

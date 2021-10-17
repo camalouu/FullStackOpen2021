@@ -28,9 +28,21 @@ const NewBlog = ({ setMessage, setBlogs, toggleVisibility }) => {
         <div>
             <form onSubmit={handleSubmit}>
                 <h1>Create new</h1>
-                title: <input type='text' onChange={({ target }) => setTitle(target.value)} /> <br />
-                author: <input type='text' onChange={({ target }) => setAuthor(target.value)} /><br />
-                url: <input type='text' onChange={({ target }) => setUrl(target.value)} /><br />
+                title: <input
+                    value={title}
+                    type='text'
+                    onChange={({ target }) => setTitle(target.value)} />
+                <br />
+                author: <input
+                    value={author}
+                    type='text'
+                    onChange={({ target }) => setAuthor(target.value)} />
+                <br />
+                url: <input
+                    value={url}
+                    type='text'
+                    onChange={({ target }) => setUrl(target.value)} />
+                <br />
                 <button type='submit'>create</button>
             </form>
         </div>

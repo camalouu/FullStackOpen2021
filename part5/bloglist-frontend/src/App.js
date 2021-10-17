@@ -4,7 +4,7 @@ import Login from './components/Login'
 import Logout from './components/Logout'
 import Blogs from './components/Blogs'
 import NewBlog from './components/Newblog'
-import Toggable from './components/Toggable'
+import Togglabe from './components/Togglabe'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -18,12 +18,12 @@ const App = () => {
         <Notification message={message} />
         <h1>Blogs</h1>
         <Logout user={user} />
-        <Toggable buttonLabel='Create new blog' ref={blogFormRef}>
+        <Togglabe buttonLabel='Create new blog' ref={blogFormRef}>
           <NewBlog
             setBlogs={setBlogs}
             setMessage={setMessage}
             toggleVisibility={blogFormRef.current} />
-        </Toggable>
+        </Togglabe>
         <Blogs user={user} blogs={blogs} setBlogs={setBlogs} />
       </div>
     )
@@ -32,12 +32,12 @@ const App = () => {
   return (
     <div>
       <Notification message={message} />
-      <Toggable buttonLabel='Log in'>
+      <Togglabe buttonLabel='Log in'>
         <Login
           setUser={setUser}
           setMessage={setMessage}
         />
-      </Toggable>
+      </Togglabe>
     </div>
   )
 }

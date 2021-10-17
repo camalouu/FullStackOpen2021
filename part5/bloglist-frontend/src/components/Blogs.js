@@ -18,7 +18,7 @@ const Blog = ({ blog, user }) => {
 
   const showDetails = { display: details ? '' : 'none' }
   const removeButtonStyle = { display: user.username === blog.user.username ? '' : 'none' }
-  
+
   const handleLike = async () => {
     const newBlog = {
       ...blog,

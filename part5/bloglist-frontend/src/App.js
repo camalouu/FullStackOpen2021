@@ -21,7 +21,6 @@ const App = () => {
         <Toggable buttonLabel='Create new blog' ref={blogFormRef}>
           <NewBlog
             setBlogs={setBlogs}
-            blogs={blogs}
             setMessage={setMessage}
             toggleVisibility={blogFormRef.current} />
         </Toggable>

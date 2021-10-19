@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-
 const Blog = ({ blog, user }) => {
 
   const [details, setDetails] = useState(false)

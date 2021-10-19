@@ -24,7 +24,6 @@ test('blog title and author', () => {
 
 })
 
-
 test('url and likes are shown when btn clicked', () => {
   const component = render(<Blog blog={blog} user={user} />)
   const button = component.getByText('view')

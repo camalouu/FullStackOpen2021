@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const NewBlog = ({ setMessage, setBlogs, toggleVisibility }) => {
+const NewBlog = ({ createBlog, setMessage, setBlogs, toggleVisibility }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    toggleVisibility.tg()
+    toggleVisibility.tg() // must be commented when running tests
     try {
-      await blogService.createBlog({ title, author, url })
+      await createBlog({ title, author, url })
       const allBlogs = await blogService.getAll()
       setBlogs(allBlogs)
       setTitle('')
@@ -26,19 +26,22 @@ const NewBlog = ({ setMessage, setBlogs, toggleVisibility }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form id='blogform' onSubmit={handleSubmit}>
         <h1>Create new</h1>
-                title: <input
+        title: <input
+          id='title'
           value={title}
           type='text'
           onChange={({ target }) => setTitle(target.value)} />
         <br />
-                author: <input
+        author: <input
+          id='author'
           value={author}
           type='text'
           onChange={({ target }) => setAuthor(target.value)} />
         <br />
-                url: <input
+        url: <input
+          id='url'
           value={url}
           type='text'
           onChange={({ target }) => setUrl(target.value)} />

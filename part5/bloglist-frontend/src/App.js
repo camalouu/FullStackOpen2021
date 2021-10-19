@@ -5,6 +5,7 @@ import Logout from './components/Logout'
 import Blogs from './components/Blogs'
 import NewBlog from './components/Newblog'
 import Togglabe from './components/Togglabe'
+import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,6 +21,7 @@ const App = () => {
         <Logout user={user} />
         <Togglabe buttonLabel='Create new blog' ref={blogFormRef}>
           <NewBlog
+            createBlog={blogService.createBlog}
             setBlogs={setBlogs}
             setMessage={setMessage}
             toggleVisibility={blogFormRef.current} />

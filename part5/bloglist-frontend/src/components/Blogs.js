@@ -12,11 +12,11 @@ const Blogs = ({ blogs, setBlogs, user }) => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
   return (
-    <div>
+    <ul>
       {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} user={user} />
       )}
-    </div>
+    </ul>
   )
 }
 

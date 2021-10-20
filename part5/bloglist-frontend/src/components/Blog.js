@@ -36,7 +36,7 @@ const Blog = ({ blog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <li style={blogStyle}>
       <div>
         {blog.title} {blog.author}
         <button onClick={() => setDetails(!details)}>
@@ -53,7 +53,7 @@ const Blog = ({ blog, user }) => {
           </div> :
           <div />
       }
-    </div>
+    </li>
   )
 }
 

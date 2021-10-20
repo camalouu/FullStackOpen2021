@@ -7,7 +7,7 @@ const Notification = ({ message }) => {
   }
   if (message)
     return (
-      <div style={styles}>
+      <div id='notification' style={styles}>
         {message}
       </div>
     )

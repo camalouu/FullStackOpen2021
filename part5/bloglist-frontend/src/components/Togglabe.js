@@ -18,7 +18,7 @@ const Togglabe = forwardRef((props, ref) => {
     <div>
       <br />
       <div style={hideWhenVisible}>
-        <button onClick={tg}> {props.buttonLabel} </button>
+        <button id='reveal-btn' onClick={tg}> {props.buttonLabel} </button>
       </div>
       <div style={showWhenVisible}>
         {props.children}

@@ -1,13 +1,13 @@
 
 export const addmsg = msg => {
     return {
-        type: 'ADDMSG',
+        type: 'ADD_MSG',
         data: { msg }
     }
 }
 export const removemsg = () => {
     return {
-        type: 'REMOVEMSG',
+        type: 'REMOVE_MSG',
     }
 }
 
@@ -18,9 +18,9 @@ const initialState = {
 
 const notificatinoReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'ADDMSG':
+        case 'ADD_MSG':
             return { text: action.data.msg, show: true }
-        case 'REMOVEMSG':
+        case 'REMOVE_MSG':
             return { text: '', show: false }
         default: return state
     }

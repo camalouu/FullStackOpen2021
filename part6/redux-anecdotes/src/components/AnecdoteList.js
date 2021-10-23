@@ -9,8 +9,8 @@ const AnecdoteList = () => {
         return anecdotes
             .filter(a => a.content.includes(filter))
             .sort((a, b) => b.votes - a.votes)
-    }
-    )
+    })
+
     const dispatch = useDispatch()
 
     const notify = anecdote => {
@@ -21,13 +21,13 @@ const AnecdoteList = () => {
         }, 5000)
     }
 
-    const vote = (id) => {
-        console.log('vote', id)
-        dispatch(voteAnecdote(id))
+    const vote = (anecdote) => {
+        console.log('vote', anecdote)
+        dispatch(voteAnecdote(anecdote))
     }
 
     const handleVote = anecdote => () => {
-        vote(anecdote.id)
+        vote(anecdote)
         notify(anecdote.content)
     }
 

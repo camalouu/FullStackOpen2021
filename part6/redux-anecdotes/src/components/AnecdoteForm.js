@@ -2,7 +2,6 @@ import React from "react"
 import { useDispatch } from 'react-redux'
 import { addAnectode } from '../reducers/anecdoteReducer'
 import { addmsg, removemsg } from '../reducers/notificatinoReducer'
-import anecdoteService from "../services/anecdoteService"
 
 const AnecdoteForm = () => {
     const dispatch = useDispatch()
@@ -11,9 +10,8 @@ const AnecdoteForm = () => {
         e.preventDefault()
         const content = e.target.anecdote.value
         e.target.anecdote.value = ''
-
-        const newAnecdote = await anecdoteService.createNew(content)
-        dispatch(addAnectode(newAnecdote))
+    
+        dispatch(addAnectode(content))
 
         const message = `you created ${content}`
         dispatch(addmsg(message))

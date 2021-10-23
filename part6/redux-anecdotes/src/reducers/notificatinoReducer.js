@@ -1,15 +1,16 @@
 
-export const addmsg = msg => {
-    return {
-        type: 'ADD_MSG',
-        data: { msg }
+export const setNotification = (ntf, limit) =>
+    async dispatch => {
+        dispatch({
+            type: 'ADD_NTF',
+            data: { ntf }
+        })
+        setTimeout(() => {
+            dispatch({
+                type: 'REMOVE_NTF',
+            })
+        }, limit)
     }
-}
-export const removemsg = () => {
-    return {
-        type: 'REMOVE_MSG',
-    }
-}
 
 const initialState = {
     text: '',
@@ -18,9 +19,9 @@ const initialState = {
 
 const notificatinoReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'ADD_MSG':
-            return { text: action.data.msg, show: true }
-        case 'REMOVE_MSG':
+        case 'ADD_NTF':
+            return { text: action.data.ntf, show: true }
+        case 'REMOVE_NTF':
             return { text: '', show: false }
         default: return state
     }

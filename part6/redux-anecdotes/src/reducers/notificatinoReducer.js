@@ -1,28 +1,24 @@
-
+let timeoutID = null
 export const setNotification = (ntf, limit) =>
     async dispatch => {
         dispatch({
             type: 'ADD_NTF',
             data: { ntf }
         })
-        setTimeout(() => {
+        timeoutID = setTimeout(() => {
             dispatch({
                 type: 'REMOVE_NTF',
             })
         }, limit)
     }
 
-const initialState = {
-    text: '',
-    show: false
-}
-
-const notificatinoReducer = (state = initialState, action) => {
+const notificatinoReducer = (state = '', action) => {
     switch (action.type) {
         case 'ADD_NTF':
-            return { text: action.data.ntf, show: true }
+            clearTimeout(timeoutID)
+            return action.data.ntf
         case 'REMOVE_NTF':
-            return { text: '', show: false }
+            return ''
         default: return state
     }
 }

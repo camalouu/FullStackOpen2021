@@ -8,8 +8,8 @@ const Notification = (props) => {
     borderWidth: 1
   }
   return (
-    props.notification.show && <div style={style}>
-      {props.notification.text}
+    props.notification && <div style={style}>
+      {props.notification}
     </div>
   )
 }

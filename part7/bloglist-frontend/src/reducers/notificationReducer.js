@@ -1,10 +1,12 @@
+let timeoutId
+
 export const addNotification = message =>
   async dispatch => {
     dispatch({
       type: 'ADD_NTF',
       data: { message }
     })
-    setTimeout(() => {
+    timeoutId = setTimeout(() => {
       dispatch({
         type: 'REMOVE_NTF',
         data: { message: '' }
@@ -15,6 +17,7 @@ export const addNotification = message =>
 const notificationReducer = (state = '', action) => {
   switch (action.type) {
     case 'ADD_NTF':
+      clearTimeout(timeoutId)
       return action.data.message
     case 'REMOVE_NTF':
       return ''

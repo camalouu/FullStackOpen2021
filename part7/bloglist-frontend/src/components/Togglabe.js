@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 const Togglabe = ({ children, buttonLabel }) => {
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(false)
   const showWhenVisible = { display: visible ? '' : 'none' }
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const tg = () => {

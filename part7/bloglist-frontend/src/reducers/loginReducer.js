@@ -31,21 +31,21 @@ export const getFromLocal = () => {
   let user = {}
   const userLoggedIn = window.localStorage.getItem('newuser')
   if (userLoggedIn) {
-    user = JSON.parse(userLoggedIn)
+    user = { ...user, ...JSON.parse(userLoggedIn) }
     blogService.setToken(user.token)
   }
   return {
-    type: 'USER_FROM_LOCAL_STORAGE',
+    type: 'FROM_LOCAL_STORAGE',
     data: { user }
   }
 }
 
 
-const userReduser = (state = {}, action) => {
+const loginReducer = (state = {}, action) => {
   switch (action.type) {
     case 'LOGIN':
       return action.data.user
-    case 'USER_FROM_LOCAL_STORAGE':
+    case 'FROM_LOCAL_STORAGE':
       return action.data.user
     case 'LOGOUT':
       return {}
@@ -54,4 +54,4 @@ const userReduser = (state = {}, action) => {
   }
 }
 
-export default userReduser
+export default loginReducer

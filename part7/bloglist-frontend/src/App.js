@@ -1,35 +1,52 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getFromLocal } from './reducers/loginReducer'
 import Notification from './components/Notification'
 import Login from './components/Login'
-import Logout from './components/Logout'
+import Navigation from './components/Navigation'
 import Blogs from './components/Blogs'
 import NewBlog from './components/Newblog'
 import Togglabe from './components/Togglabe'
-import { useSelector } from 'react-redux'
-import { isEmptyObject } from './helpers'
+import Users from './components/Users'
+import User from './components/User'
+import { Redirect, Route, Switch } from 'react-router'
+import Blog from './components/Blog'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
-  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.loggedInUser)
 
-  if (isEmptyObject(user)) {
-    return (
-      <div>
-        <Notification />
-        <Togglabe buttonLabel='Log in'>
-          <Login />
-        </Togglabe>
-      </div>
-    )
-  }
+  useEffect(() => {
+    dispatch(getFromLocal())
+  }, [])
+
   return (
     <div>
+      <Navigation user={user} />
       <Notification />
-      <h1>Blogs</h1>
-      <Logout />
-      <Togglabe buttonLabel='Create new blog'>
-        <NewBlog />
-      </Togglabe>
-      <Blogs />
+      <Switch>
+        <Route path='/login'>
+          <Togglabe buttonLabel='Log in'>
+            <Login />
+          </Togglabe>
+        </Route>
+        <Route path='/users/:id'>
+          <User />
+        </Route>
+        <Route path='/users'>
+          {user.username ? <Users /> : <Redirect to='/login' />}
+        </Route>
+        <Route path='/blogs/:id'>
+          <Blog />
+        </Route>
+        <Route path='/'>
+          <h1>Blogs</h1>
+          {user.username && <Togglabe buttonLabel='Create new blog'>
+            <NewBlog />
+          </Togglabe>}
+          <Blogs />
+        </Route>
+      </Switch>
     </div>
   )
 }

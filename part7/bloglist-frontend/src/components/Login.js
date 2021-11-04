@@ -21,8 +21,8 @@ const Login = () => {
 
   return (
     <form onSubmit={handleLogin}>
-      username: <input id='username' reset='asdf' {...username} /><br />
-      password: <input id='password' reset='asdf' {...password} /><br />
+      username: <input id='username'{...username} reset='' /><br />
+      password: <input id='password'{...password} reset='' /><br />
       <button id='login-btn' type="submit">Log in</button>
     </form>
   )

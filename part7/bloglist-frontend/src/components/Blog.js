@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { likeBlog, removeBlog } from '../reducers/blogsReducer'
+import Comments from './Comments'
 
 const Blog = () => {
   const id = useParams().id
@@ -25,10 +26,11 @@ const Blog = () => {
   return (
     <div>
       <h1>{blog.title} {blog.author}</h1>
-      <div>{blog.url}</div>
+      <a href={blog.url}>{blog.url}</a>
       <div>{blog.likes} <button onClick={handleLike}>like</button></div>
       <div>added by {blog.user.username}</div>
       {isCreator && <button onClick={handleRemove}>remove</button>}
+      <Comments id={id} />
     </div>
   )
 }

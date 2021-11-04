@@ -25,9 +25,9 @@ const NewBlog = () => {
     <div>
       <form id='blogform' onSubmit={handleSubmit}>
         <h1>Create new</h1>
-        title: <input id='title' {...title} /> <br />
-        author: <input id='author' {...author} /> <br />
-        url: <input id='url' {...url} /> <br />
+        title: <input id='title' {...title} reset='' /> <br />
+        author: <input id='author' {...author} reset='' /> <br />
+        url: <input id='url' {...url} reset='' /> <br />
         <button id='create-blog-btn' type='submit'>create</button>
       </form>
     </div>

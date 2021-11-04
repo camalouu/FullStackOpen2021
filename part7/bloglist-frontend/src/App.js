@@ -26,7 +26,7 @@ const App = () => {
       <Notification />
       <Switch>
         <Route path='/login'>
-          <Togglabe buttonLabel='Log in'>
+          <Togglabe buttonLabel='Log in' show={true}>
             <Login />
           </Togglabe>
         </Route>
@@ -41,7 +41,7 @@ const App = () => {
         </Route>
         <Route path='/'>
           <h1>Blogs</h1>
-          {user.username && <Togglabe buttonLabel='Create new blog'>
+          {user.username && <Togglabe buttonLabel='Create new blog' show={false}>
             <NewBlog />
           </Togglabe>}
           <Blogs />

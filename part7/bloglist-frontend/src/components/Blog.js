@@ -1,4 +1,5 @@
 import React from 'react'
+import { Container, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router'
 import { likeBlog, removeBlog } from '../reducers/blogsReducer'
@@ -24,14 +25,14 @@ const Blog = () => {
   const isCreator = blog.user.username === user.username
 
   return (
-    <div>
+    <Container className=''>
       <h1>{blog.title} {blog.author}</h1>
       <a href={blog.url}>{blog.url}</a>
-      <div>{blog.likes} <button onClick={handleLike}>like</button></div>
+      <div>{blog.likes} <Button variant="outline-success" size='sm' onClick={handleLike}>like</Button></div>
       <div>added by {blog.user.username}</div>
-      {isCreator && <button onClick={handleRemove}>remove</button>}
+      {isCreator && <Button variant='danger' onClick={handleRemove}>remove</Button>}
       <Comments id={id} />
-    </div>
+    </Container>
   )
 }
 

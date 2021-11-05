@@ -1,4 +1,6 @@
+import Button from '@restart/ui/esm/Button'
 import React from 'react'
+import { Container } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logout } from '../reducers/loginReducer'
@@ -21,17 +23,16 @@ const Navigation = ({ user }) => {
   }
 
   return (
-    <div style={navStyle}>
+    <Container style={navStyle}>
       <Link style={padding} to='/'>blogs</Link>
       <Link style={padding} to='/users'>users</Link>
       {
         user.username ? <form onSubmit={handleLogout}>
           <div style={padding} >{user.username} logged in</div>
-          <button type='submit' >logout</button>
+          <Button variant='primary' type='submit' >logout</Button>
         </form > : <Link style={padding} to='/login'>login</Link>
       }
-
-    </div >
+    </Container >
 
   )
 }

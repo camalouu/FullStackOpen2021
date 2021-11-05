@@ -2,6 +2,7 @@ import React from 'react'
 import useField from './hooks'
 import { useDispatch } from 'react-redux'
 import { addBlog } from '../reducers/blogsReducer'
+import { Form, Button } from 'react-bootstrap'
 
 const NewBlog = () => {
   const title = useField('text')
@@ -22,15 +23,18 @@ const NewBlog = () => {
   }
 
   return (
-    <div>
-      <form id='blogform' onSubmit={handleSubmit}>
-        <h1>Create new</h1>
-        title: <input id='title' {...title} reset='' /> <br />
-        author: <input id='author' {...author} reset='' /> <br />
-        url: <input id='url' {...url} reset='' /> <br />
-        <button id='create-blog-btn' type='submit'>create</button>
-      </form>
-    </div>
+    <Form onSubmit={handleSubmit}>
+      <h1>Create new</h1>
+      <Form.Group>
+        <Form.Label>Title: </Form.Label>
+        <Form.Control {...title} reset='' />
+        <Form.Label>Author: </Form.Label>
+        <Form.Control {...author} reset='' />
+        <Form.Label>Url: </Form.Label>
+        <Form.Control {...url} reset='' />
+      </Form.Group>
+      <Button className='mt-2' variant='success' type='submit'>create</Button>
+    </Form>
   )
 }
 

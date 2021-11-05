@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
 
 const Togglabe = ({ children, buttonLabel, show }) => {
   const [visible, setVisible] = useState(show)
@@ -11,11 +12,11 @@ const Togglabe = ({ children, buttonLabel, show }) => {
     <div>
       <br />
       <div style={hideWhenVisible}>
-        <button id='reveal-btn' onClick={tg}> {buttonLabel} </button>
+        <Button id='reveal-btn' onClick={tg}> {buttonLabel} </Button>
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={tg}>cancel</button>
+        <Button className='mt-2' variant='danger' onClick={tg}>cancel</Button>
       </div>
       <br />
     </div>

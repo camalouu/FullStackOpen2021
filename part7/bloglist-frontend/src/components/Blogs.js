@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { ListGroup } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { initilizeBlogs } from '../reducers/blogsReducer'
@@ -9,21 +10,17 @@ const Blogs = () => {
   useEffect(() => {
     dispatch(initilizeBlogs())
   }, [])
-  const blogStyle = {
-    display: 'block',
-    margin: 5,
-    padding: 3,
-    border: '1px solid black',
-    fontSize: 20
-  }
+
   return (
-    <ul>
+    <ListGroup numbered>
       {blogs.map(blog =>
-        <Link style={blogStyle  } key={blog.id} to={`/blogs/${blog.id}`}>
-          {blog.title}
-        </Link>
+        <ListGroup.Item key={blog.id} >
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title}
+          </Link>
+        </ListGroup.Item>
       )}
-    </ul>
+    </ListGroup>
   )
 }
 

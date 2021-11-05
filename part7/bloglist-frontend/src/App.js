@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { getFromLocal } from './reducers/loginReducer'
+import { Redirect, Route, Switch } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
 import Notification from './components/Notification'
 import Login from './components/Login'
 import Navigation from './components/Navigation'
@@ -8,9 +10,8 @@ import NewBlog from './components/Newblog'
 import Togglabe from './components/Togglabe'
 import Users from './components/Users'
 import User from './components/User'
-import { Redirect, Route, Switch } from 'react-router'
 import Blog from './components/Blog'
-import { useDispatch, useSelector } from 'react-redux'
+import { Container } from 'react-bootstrap'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -21,7 +22,7 @@ const App = () => {
   }, [])
 
   return (
-    <div>
+    <Container className="p-3">
       <Navigation user={user} />
       <Notification />
       <Switch>
@@ -47,7 +48,7 @@ const App = () => {
           <Blogs />
         </Route>
       </Switch>
-    </div>
+    </Container>
   )
 }
 

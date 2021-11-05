@@ -3,6 +3,7 @@ import useField from './hooks'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/loginReducer'
 import { useHistory } from 'react-router'
+import { Button, Form } from 'react-bootstrap'
 
 const Login = () => {
   const username = useField('text')
@@ -20,11 +21,15 @@ const Login = () => {
   }
 
   return (
-    <form onSubmit={handleLogin}>
-      username: <input id='username'{...username} reset='' /><br />
-      password: <input id='password'{...password} reset='' /><br />
-      <button id='login-btn' type="submit">Log in</button>
-    </form>
+    <Form onSubmit={handleLogin}>
+      <Form.Group>
+        <Form.Label>username: </Form.Label>
+        <Form.Control {...username} reset='' />
+        <Form.Label>password: </Form.Label>
+        <Form.Control {...password} reset='' />
+      </Form.Group>
+      <Button className='mt-3' variant='success' type="submit">Log in</Button>
+    </Form>
   )
 }
 

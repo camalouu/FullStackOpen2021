@@ -5,8 +5,9 @@ GET http://localhost:3001/api/blogs
 ###delete blog###
 DELETE http://localhost:3001/api/blogs/6156e27950be8e9c6c8fd548
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIyIiwiaWQiOiI2MTU2ZTFiY2UzN2U3MjgwNjQ5ZDFkMTEiLCJpYXQiOjE2MzMwODM4NDh9.tuNkOFe771ALWjaNo-FdoK-QwFyRC4FYERyihQ6ZqUI
-###create blog###
 
+
+###create blog###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld3VzZXIyIiwiaWQiOiI2MTU2ZTFiY2UzN2U3MjgwNjQ5ZDFkMTEiLCJpYXQiOjE2MzMwODM4NDh9.tuNkOFe771ALWjaNo-FdoK-QwFyRC4FYERyihQ6ZqUI
@@ -17,3 +18,19 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5ld
     "url": "77hhbb.org",
     "likes": 10
 }
+
+
+###create a comment###
+POST http://localhost:3001/api/blogs/618029a6e192248ca6fc1168/comments
+Content-Type: application/json
+
+{
+    "comment": "another comment"
+}
+
+
+###create a comment###
+GET http://localhost:3001/api/blogs/618029a6e192248ca6fc1168/comments
+
+###DELETE all comments###
+DELETE http://localhost:3001/api/blogs/618029a6e192248ca6fc1168/comments

@@ -2,6 +2,9 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/Blog')
 const User = require('../models/User')
 const middleware = require('../utils/middleware')
+const comments = require('./comments_controller')
+
+blogRouter.use('/:id/comments', comments)
 
 blogRouter.get('/', async (request, response, next) => {
     try {

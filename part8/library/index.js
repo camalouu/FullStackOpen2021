@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server')
+const { v1: uuid } = require('uuid')
 
 let authors = [
     {
@@ -97,8 +98,19 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String): [Book!]!
+    allBooks(author: String genre: String): [Book!]!
     allAuthors: [Author!]!
+  }
+
+  type Mutation {
+    addBook(
+        title: String!
+        published: Int!
+        author: String!
+        id: String!
+        genres: [String!]!):Book!
+
+    editAuthor(name: String!, born: Int! ): Author
   }
 `
 
@@ -107,9 +119,18 @@ const resolvers = {
         bookCount: () => books.length,
         authorCount: () => authors.length,
         allBooks: (root, args) => {
-            if (!args.author)
+            if (!(args.author || args.genre))
                 return books
-            return books.filter(b => b.author === args.author)
+            if (args.genre && args.author)
+                return books
+                    .filter(b =>
+                        b.genres.includes(args.genre) &&
+                        b.author === args.author
+                    )
+            if (args.author)
+                return books.filter(b => b.author === args.author)
+            if (args.genre)
+                return books.filter(b => b.genres.includes(args.genre))
         },
         allAuthors: () => authors
     },
@@ -121,6 +142,27 @@ const resolvers = {
                     count++
             })
             return count
+        }
+    },
+    Mutation: {
+        addBook: (root, args) => {
+            const newbook = { ...args }
+            books = books.concat(newbook)
+            const authorExist = authors.find(a => a.name === args.author)
+            if (!authorExist)
+                authors = authors.concat({ name: args.author, id: uuid() })
+            return newbook
+        },
+        editAuthor: (root, args) => {
+            const authorIndex = authors.findIndex(a => a.name === args.name)
+            const updatedAuthor = { ...authors[authorIndex], born: args.born }
+            if (authorIndex !== -1) {
+                authors = authors.map(
+                    (author, index) => index === authorIndex ? updatedAuthor : author
+                )
+                return updatedAuthor
+            }
+            return null
         }
     }
 }

@@ -111,11 +111,11 @@ const resolvers = {
         login: async (root, { username, password }) => {
             const user = await User.findOne({ username })
 
-            if (!user || password !== 'password')
+            if (!user || password !== '1')
                 throw new UserInputError("wrong username or password")
 
             return {
-                value: jwt.sign({ id: user._id, username }, SECRET)
+                value: jwt.sign({ id: user._id, username }, SECRET, { expiresIn: 60 * 60 * 60 })
             }
         },
 

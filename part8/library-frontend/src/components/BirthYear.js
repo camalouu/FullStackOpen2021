@@ -17,7 +17,6 @@ const BirthYear = ({ authors }) => {
     const submit = e => {
         e.preventDefault()
         editAuthor({ variables: { name: selectedName.value, born: parseInt(born) } })
-        setName('')
         setBorn('')
     }
     return (

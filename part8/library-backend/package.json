@@ -10,8 +10,9 @@
   "author": "me",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^3.5.0",
-    "graphql": "^16.0.1",
+    "apollo-server": "^2.10.1",
+    "graphql": "^14.6.0",
+    "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13",
     "mongoose-unique-validator": "^3.0.0",

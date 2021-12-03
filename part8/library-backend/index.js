@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
 const User = require('./models/User')
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
 const SECRET = 'secret'
 
 mongoose
@@ -64,6 +66,11 @@ const typeDefs = gql`
             password: String!
         ): Token
     }
+
+    type Subscription {
+        bookAdded: Book!
+    }
+
 `
 
 const resolvers = {
@@ -126,6 +133,8 @@ const resolvers = {
                 const newbook = await Book.create({ ...args, author: author._id })
                 author.books = author.books.concat(newbook._id)
                 await author.save()
+
+                pubsub.publish('BOOK_ADDED', { bookAdded: newbook })
                 return newbook.populate('author')
             }
 
@@ -134,6 +143,7 @@ const resolvers = {
                 const newbook = await Book.create({ ...args, author: newAuthor._id })
                 newAuthor.books = newAuthor.books.concat(newbook._id)
                 await newAuthor.save()
+                pubsub.publish('BOOK_ADDED', { bookAdded: newbook })
                 return newbook.populate('author')
             } catch (error) {
                 await Author.findByIdAndDelete(newAuthor._id)
@@ -151,6 +161,11 @@ const resolvers = {
                 throw new UserInputError("incorrect name")
             return updated
 
+        }
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
         }
     }
 }
@@ -173,6 +188,7 @@ const server = new ApolloServer({
     }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
     console.log(`Server ready at ${url}`)
+    console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

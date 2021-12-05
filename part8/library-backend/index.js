@@ -12,6 +12,7 @@ mongoose
     .connect('mongodb://localhost:27017/library')
     .then(_ => console.log('connected to db'))
     .catch(err => console.error(err))
+mongoose.set('debug', true);
 
 const typeDefs = gql`
     type User {
@@ -133,9 +134,9 @@ const resolvers = {
                 const newbook = await Book.create({ ...args, author: author._id })
                 author.books = author.books.concat(newbook._id)
                 await author.save()
-
+                await newbook.populate('author')
                 pubsub.publish('BOOK_ADDED', { bookAdded: newbook })
-                return newbook.populate('author')
+                return newbook
             }
 
             const newAuthor = await Author.create({ name: args.author })
@@ -143,8 +144,9 @@ const resolvers = {
                 const newbook = await Book.create({ ...args, author: newAuthor._id })
                 newAuthor.books = newAuthor.books.concat(newbook._id)
                 await newAuthor.save()
+                await newbook.populate('author')
                 pubsub.publish('BOOK_ADDED', { bookAdded: newbook })
-                return newbook.populate('author')
+                return newbook
             } catch (error) {
                 await Author.findByIdAndDelete(newAuthor._id)
                 throw new UserInputError(error.message)

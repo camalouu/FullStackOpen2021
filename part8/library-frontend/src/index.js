@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink } from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache, split, HttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 
 const authLink = setContext((_, { headers }) => {
     const token = window.localStorage.getItem('user')
@@ -14,11 +16,31 @@ const authLink = setContext((_, { headers }) => {
     }
 })
 
+const wsLink = new WebSocketLink({
+    uri: 'ws://localhost:4000/graphql',
+    options: {
+        reconnect: true
+    }
+});
+
 const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
+
+const splitLink = split(
+    ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+            definition.kind === 'OperationDefinition' &&
+            definition.operation === 'subscription'
+        );
+    },
+    wsLink,
+    authLink.concat(httpLink),
+);
+
 
 const client = new ApolloClient({
     cache: new InMemoryCache(),
-    link: authLink.concat(httpLink)
+    link: splitLink
 })
 
 ReactDOM.render(

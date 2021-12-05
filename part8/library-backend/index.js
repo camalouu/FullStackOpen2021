@@ -12,7 +12,7 @@ mongoose
     .connect('mongodb://localhost:27017/library')
     .then(_ => console.log('connected to db'))
     .catch(err => console.error(err))
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 const typeDefs = gql`
     type User {
@@ -129,8 +129,8 @@ const resolvers = {
 
         addBook: async (root, args, { currentUser }) => {
             if (!currentUser) throw new AuthenticationError("Not Authenticated")
-            const author = await Author.findOne({ name: args.author })
-            if (author) {
+
+            const addbook = async (author) => {
                 const newbook = await Book.create({ ...args, author: author._id })
                 author.books = author.books.concat(newbook._id)
                 await author.save()
@@ -139,16 +139,17 @@ const resolvers = {
                 return newbook
             }
 
+            const author = await Author.findOne({ name: args.author })
+            if (author)
+                return addbook(author)
+
             const newAuthor = await Author.create({ name: args.author })
             try {
-                const newbook = await Book.create({ ...args, author: newAuthor._id })
-                newAuthor.books = newAuthor.books.concat(newbook._id)
-                await newAuthor.save()
-                await newbook.populate('author')
-                pubsub.publish('BOOK_ADDED', { bookAdded: newbook })
-                return newbook
+                const added = await addbook(newAuthor)
+                return added
             } catch (error) {
                 await Author.findByIdAndDelete(newAuthor._id)
+                console.log("error occurerdddd")
                 throw new UserInputError(error.message)
             }
         },

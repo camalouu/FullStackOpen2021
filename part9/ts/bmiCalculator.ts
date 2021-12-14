@@ -17,3 +17,5 @@ const [height, weight] = process.argv.slice(2)
 console.log(
     calculateBmi(Number(height), Number(weight))
 )
+
+export default calculateBmi

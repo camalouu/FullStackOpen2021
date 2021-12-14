@@ -20,17 +20,18 @@ const calculateExercises = (hours: Array<number>): Result => {
     return { periodLength, trainingDays, success, rating, ratingDescription, target, average }
 }
 
-const parseArguments = (args: Array<number>): Array<number> => {
+const parseArguments = (args: Array<string>): Array<number> => {
     if (args.length < 2)
         throw new Error('Not enough arguments');
-    if (args.every(n => !isNaN(n)))
-        return args;
+    const numberArray = args.map(n => Number(n));
+    if (numberArray.every(n => !isNaN(n)))
+        return numberArray;
     else
         throw new Error('Provided values are not numbers');
 }
 
 try {
-    const inputArray = process.argv.slice(2).map(n => Number(n));
+    const inputArray = process.argv.slice(2)
     console.log(
         calculateExercises(
             parseArguments(inputArray)

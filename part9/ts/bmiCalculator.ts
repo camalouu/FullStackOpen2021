@@ -1,5 +1,3 @@
-
-
 const calculateBmi = (height: number, weight: number): string => {
     const heightInMeters = height / 100;
     const answer = weight / heightInMeters / heightInMeters;
@@ -14,4 +12,8 @@ const calculateBmi = (height: number, weight: number): string => {
     else return 'Obese (Class III)'
 }
 
-console.log(calculateBmi(156, 45))
+const [height, weight] = process.argv.slice(2)
+
+console.log(
+    calculateBmi(Number(height), Number(weight))
+)

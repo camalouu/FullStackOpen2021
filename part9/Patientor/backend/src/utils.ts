@@ -39,7 +39,8 @@ const patientParser = (obj: any): NewPatient => {
         dateOfBirth: parseDate(obj.dateOfBirth),
         ssn: parseStringField('ssn', obj.ssn),
         occupation: parseStringField('occupation', obj.occupation),
-        gender: parseGender(obj.gender)
+        gender: parseGender(obj.gender),
+        entries: []
     };
     return newPatient;
 };

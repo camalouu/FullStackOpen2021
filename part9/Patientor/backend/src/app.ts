@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/ping', pingRoute);
-app.use('/api/diagnoses', diagnosesRoute);
+app.use('/api/diagnosis', diagnosesRoute);
 app.use('/api/patients', patientsRoute);
 
 export default app;

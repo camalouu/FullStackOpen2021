@@ -1,6 +1,6 @@
 import { Router } from "express";
 import patientService from "../services/patientService";
-import patientParser from "../utils";
+import { patientParser, entryParser } from "../utils";
 
 const route = Router();
 
@@ -28,6 +28,20 @@ route.post('/', (req, res) => {
             errorMessage = error.message;
         }
 
+        res.status(400).send({ error: errorMessage });
+    }
+});
+
+route.post('/:id/entries', (req, res) => {
+    try {
+        const parsedEntry = entryParser(req.body);
+        const updatedPatient = patientService.addEntry(parsedEntry, req.params.id);
+        res.send(updatedPatient);
+    } catch (error) {
+        let errorMessage = 'Something bad happened: \n';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
         res.status(400).send({ error: errorMessage });
     }
 });

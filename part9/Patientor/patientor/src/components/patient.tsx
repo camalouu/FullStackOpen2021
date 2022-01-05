@@ -1,33 +1,11 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { updatePatient, getDiagnosis, useStateValue } from "../state";
-import { Diagnosis, Patient } from "../types";
+import { updatePatient, useStateValue } from "../state";
+import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { Icon } from "semantic-ui-react";
-
-
-const DiagnosisComponent = ({ code }: { code: string }) => {
-    const [{ diagnosis }, dispatch] = useStateValue();
-
-    useEffect(() => {
-        if (!diagnosis[code])
-            void axios
-                .get<Diagnosis>(`${apiBaseUrl}/diagnosis/${code}`)
-                .then(
-                    ({ data }) => dispatch(getDiagnosis(data))
-                );
-    }, []);
-
-    if (!diagnosis[code])
-        return <h1>loading...</h1>;
-
-    return (
-        <li>
-            {code} {diagnosis[code].name}
-        </li>
-    );
-};
+import EntryDetails from "./Entry";
 
 const PatientInfo = () => {
     const { id } = useParams<{ id: string }>();
@@ -61,11 +39,7 @@ const PatientInfo = () => {
             {
                 patients[id].entries.map(entry => (
                     <div key={entry.id}>
-                        <div>{entry.date} </div>
-                        <em>{entry.description}</em>
-                        <ul>
-                            {entry.diagnosisCodes?.map(code => <DiagnosisComponent code={code} key={code} />)}
-                        </ul>
+                        <EntryDetails entry={entry} />
                     </div>
                 ))
             }

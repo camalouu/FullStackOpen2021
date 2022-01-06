@@ -12,11 +12,12 @@ const PatientInfo = () => {
     const { id } = useParams<{ id: string }>();
     const [{ patients }, dispatch] = useStateValue();
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [error, setError] = React.useState<string | undefined>();
 
     const openModal = (): void => setModalOpen(true);
-
     const closeModal = (): void => {
         setModalOpen(false);
+        setError(undefined);
     };
 
     const noPatientData =
@@ -34,7 +35,27 @@ const PatientInfo = () => {
 
     const submitNewEntry = (values: Omit<HealthCheckEntry, 'id'>) => {
         void axios
-            .post<HealthCheckEntry>(`${apiBaseUrl}/patients/${id}/entries`, values);
+            .post<HealthCheckEntry>(`${apiBaseUrl}/patients/${id}/entries`, values)
+            .then(() => {
+                void axios
+                    .get<Patient>(`${apiBaseUrl}/patients/${id}`)
+                    .then(({ data }) => {
+                        dispatch(updatePatient(data));
+                        closeModal();
+                    });
+            })
+            .catch(
+                (error: unknown) => {
+                    let errorMessage = 'Something went wrong.';
+                    if (axios.isAxiosError(error) && error.response) {
+                        console.error(error.response.data);
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        errorMessage = error.response.data.error;
+                    }
+                    setError(errorMessage);
+                }
+            );
+
     };
 
     if (noPatientData)
@@ -60,9 +81,9 @@ const PatientInfo = () => {
                 modalOpen={modalOpen}
                 onSubmit={submitNewEntry}
                 onClose={() => closeModal()}
+                error={error}
             />
             <Button onClick={() => openModal()}>add new entry</Button>
-
         </>
     );
 };

@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { updatePatient, useStateValue } from "../state";
-import { Patient, HealthCheckEntry } from "../types";
+import { addPatientEntry, updatePatient, useStateValue } from "../state";
+import { Patient, EntriesWithoutId, Entry } from "../types";
 import { apiBaseUrl } from "../constants";
 import { Button, Icon } from "semantic-ui-react";
 import EntryDetails from "./Entry";
@@ -33,16 +33,12 @@ const PatientInfo = () => {
                 );
     }, []);
 
-    const submitNewEntry = (values: Omit<HealthCheckEntry, 'id'>) => {
+    const submitNewEntry = (values: EntriesWithoutId) => {
         void axios
-            .post<HealthCheckEntry>(`${apiBaseUrl}/patients/${id}/entries`, values)
-            .then(() => {
-                void axios
-                    .get<Patient>(`${apiBaseUrl}/patients/${id}`)
-                    .then(({ data }) => {
-                        dispatch(updatePatient(data));
-                        closeModal();
-                    });
+            .post<Entry>(`${apiBaseUrl}/patients/${id}/entries`, values)
+            .then(({ data }) => {
+                dispatch(addPatientEntry(id, data));
+                closeModal();
             })
             .catch(
                 (error: unknown) => {

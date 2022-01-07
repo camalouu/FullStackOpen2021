@@ -1,104 +1,54 @@
-import React from "react";
-import { Formik, Form, Field } from "formik";
-import { Grid, Button } from "semantic-ui-react";
-import { DiagnosisSelection, NumberField, TextField } from "../AddPatientModal/FormField";
-import { HealthCheckEntry } from "../types";
-import { useStateValue } from "../state";
+import React, { useState } from "react";
+import { Dropdown, DropdownProps, FormField } from "semantic-ui-react";
+import HealthCheckForm from "./HealthCheckForm";
+import HospitalForm from "./HospitalForm";
+import OccupationalHealthCareForm from "./OccupationalHealthCareForm";
+import { EntriesWithoutId } from "../types";
 
 interface FormProps {
-    onSubmit: (values: Omit<HealthCheckEntry, 'id'>) => void;
+    onSubmit: (values: EntriesWithoutId) => void;
     onCancel: () => void
 }
 
-const AddEntryForm = ({ onSubmit, onCancel }: FormProps) => {
+const options = [
+    { value: "HealthCheckEntry", text: "Health check" },
+    { value: "HospitalEntry", text: "Hospital" },
+    { value: "OccupationalHealthcareEntry", text: "Occupational health care" }
+];
 
-    const [{ diagnosis }] = useStateValue();
-
+const EntryForm = ({ onSubmit, onCancel }: FormProps) => {
+    const [form, setForm] = useState("HealthCheckEntry");
+    const props = { onSubmit, onCancel };
+    const onChange = (
+       
+        data: DropdownProps
+    ) => {
+        setForm(data.value as string);
+    };
     return (
-        <Formik
-            initialValues={{
-                description: '',
-                date: '',
-                specialist: '',
-                type: "HealthCheck",
-                healthCheckRating: 0,
-                diagnosisCodes: [''],
-            }}
-            onSubmit={onSubmit}
-            validate={values => {
-                const requiredError = "Field is required";
-                const errors: { [field: string]: string } = {};
-                if (!values.description) {
-                    errors.description = requiredError;
-                }
-                if (!values.date) {
-                    errors.date = requiredError;
-                }
-                if (!values.specialist) {
-                    errors.specialist = requiredError;
-                }
-                if (!values.healthCheckRating) {
-                    errors.healthCheckRating = requiredError;
-                }
-                return errors;
-            }}
-        >
-            {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+        <>
+            <FormField>
+                <label>Select the type of entry: </label>
+                <Dropdown
+                    placeholder='Select type'
+                    fluid
+                    selection
+                    options={options}
+                    onChange={onChange}
+                    defaultValue={form}
+                />
+            </FormField>
+            {
+                form === "HealthCheckEntry" ?
+                <HealthCheckForm {...props} /> 
+                : form === "HospitalEntry" ?
+                <HospitalForm {...props} /> 
+                :
+                <OccupationalHealthCareForm {...props} />
+            }
+        </>
 
-                return (
-                    <Form className="form ui">
-                        <Field
-                            label="Description"
-                            placeholder="Description"
-                            name="description"
-                            component={TextField}
-                        />
-                        <Field
-                            label="Date"
-                            placeholder="Date"
-                            name="date"
-                            component={TextField}
-                        />
-                        <Field
-                            label="Specialist"
-                            placeholder="Specialist"
-                            name="specialist"
-                            component={TextField}
-                        />
-                        <Field
-                            label="healthCheckRating"
-                            name="healthCheckRating"
-                            component={NumberField}
-                            min={0}
-                            max={3}
-                        />
-                        <DiagnosisSelection
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            diagnoses={Object.values(diagnosis)}
-                        />
-                        <Grid>
-                            <Grid.Column floated="left" width={5}>
-                                <Button type="button" onClick={onCancel} color="red">
-                                    Cancel
-                                </Button>
-                            </Grid.Column>
-                            <Grid.Column floated="right" width={5}>
-                                <Button
-                                    type="submit"
-                                    floated="right"
-                                    color="green"
-                                    disabled={!dirty || !isValid}
-                                >
-                                    Add
-                                </Button>
-                            </Grid.Column>
-                        </Grid>
-                    </Form>
-                );
-            }}
-        </Formik >
     );
 };
 
-export default AddEntryForm;
+export default EntryForm;

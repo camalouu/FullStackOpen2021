@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import { HealthCheckEntry } from '../types';
+import { EntriesWithoutId } from '../types';
 import AddEntryForm from './addEntryForm';
 
 interface Props {
     modalOpen: boolean;
     onClose: () => void;
-    onSubmit: (values: Omit<HealthCheckEntry, 'id'>) => void;
+    onSubmit: (values: EntriesWithoutId) => void;
     error?: string;
 }
 

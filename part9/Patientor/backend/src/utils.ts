@@ -109,12 +109,11 @@ export const entryParser = (obj: any): EntryWithoutId => {
                 ...base,
                 type: "OccupationalHealthcare",
                 employerName: parseStringField("employerName", obj.employerName),
-                sickLeave: obj.sickLeave ?
+                sickLeave: obj.sickLeave.startDate && obj.sickLeave.endDate ?
                     {
                         startDate: parseDate(obj.sickLeave.startDate),
                         endDate: parseDate(obj.sickLeave.endDate),
-                    }
-                    : undefined
+                    } : undefined
             };
         default:
             throw new Error("blabla objecttypee error");
